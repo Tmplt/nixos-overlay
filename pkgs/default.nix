@@ -1,0 +1,5 @@
+{ callPackage }:
+
+{
+  packettracer = callPackage ./packettracer {};
+}
