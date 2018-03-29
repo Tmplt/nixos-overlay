@@ -5,6 +5,7 @@ source $stdenv/setup
 p=$out/usr/share/packettracer
 mkdir -p $p
 
+# XXX: when extracting some files, we apparently lack permission? Why?
 echo "unpacking $src..."
 tar xvfa $src --directory $p || echo "some files could not be extracted, continuing..."
 
@@ -25,12 +26,14 @@ install -D -m644 "$p/eula.txt" "$out/usr/share/licenses/packettracer/eula.txt"
 arr=($srcs)
 
 # Shell script to start PT and tell it to use included qt files
+# XXX: never used, and contains absolute paths not suitable for Nix
 install -D -m755 "${arr[0]}" "$out/usr/share/packettracer/packettracer"
 
 # Add environment variable
 install -D -m755 "${arr[1]}" "$out/etc/profile.d/packettracer.sh"
 
 # Improved version of Cisco's linguist script
+# XXX: is this ever used? Perhaps during run-time?
 install -D -m755 "${arr[2]}" "$out/usr/share/packettracer/linguist"
 
 # Patch binaries
@@ -46,6 +49,6 @@ patchelf --interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" \
     --set-rpath $libPath \
     $p/bin/meta
 
-# Symlink to /usr/bin
-mkdir -p "$out//bin"
+# Symlink to /bin
+mkdir -p "$out/bin"
 ln -s "$p/bin/PacketTracer7" "$out/bin/PacketTracer7"
