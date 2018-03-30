@@ -1,11 +1,9 @@
-{ stdenv, requireFile, fetchurl, libpng12, openssl, icu }:
-# with import <nixpkgs> {};
+# { stdenv, requireFile, lib, qt5, openssl }: # TODO: add the remaining deps here
+with import <nixpkgs> {};
 
-let version = "7.1.1"; in
-
-stdenv.mkDerivation {
+stdenv.mkDerivation rec {
   name = "packettracer-${version}";
-  builder = ./builder.sh;
+  version = "7.1.1";
 
   src = requireFile {
     name = "Packet_Tracer_${version}_for_Linux_64_bit.tar";
@@ -13,13 +11,55 @@ stdenv.mkDerivation {
     sha256 = "8ee064c92f2465fd79017397750f4d12c212c591d8feb1d198863e992613b3b7";
   };
 
-  srcs = [ ./packettracer ./packettracer.sh ./linguist ];
+  env_script = ./packettracer.sh;
 
-  libPath = stdenv.lib.makeLibraryPath
-    [ libpng12 openssl icu ];
+  builder = ./builder.sh;
 
-  meta = {
+  libPath = stdenv.lib.makeLibraryPath [
+    # Output of de-generate
+    stdenv.cc.cc.lib
+    pulseaudioFull.out
+    libsForQt56.qtinstaller.out
+    zlibStatic.out
+    qt56.full.out
+    zulu.out
+    zlib.out
+    bzip2.out
+    libsForQt5.qtinstaller.out
+    apulse.out
+    freetype.out
+    xlibs.xcbutilimage.out
+    python27Packages.pycurl.out
+    glib-tested.out
+    xlibs.libxcb.out
+    xlibs.libX11.out
+    xlibs.libXi.out
+    xlibs.xcbutilkeysyms.out
+    fontconfig.lib
+    libpulseaudio.out
+    openssl.out
+    qt5.qtmultimedia.out
+    fontconfig_210.lib
+    xlibs.xcbutilwm.out
+    scilab-bin.out
+    openssl.debug
+    libpng12.out
+    pulseaudioLight.out
+    qt56.qtmultimedia.out
+    python36Packages.pycurl.out
+    xlibs.xcbutilrenderutil.out
+    qt56.qtbase.out
+    glib.out
+    robomongo.out
+    qt5.qtbase.out
+    zulu8.out
+  ];
+
+  meta = with stdenv.lib; {
+    homepage = http://www.netacad.com/about-networking-academy/packet-tracer/;
     description = "Cisco Packet Tracer v${version}";
-    homepage = "http://www.netacad.com/about-networking-academy/packet-tracer";
+    # license = licenses.proprietary;
+    platforms = platforms.linux;
   };
+
 }
