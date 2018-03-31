@@ -11,8 +11,6 @@ stdenv.mkDerivation rec {
     sha256 = "8ee064c92f2465fd79017397750f4d12c212c591d8feb1d198863e992613b3b7";
   };
 
-  env_script = ./packettracer.sh;
-
   builder = ./builder.sh;
 
   libPath = stdenv.lib.makeLibraryPath [

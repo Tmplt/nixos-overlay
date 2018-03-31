@@ -24,7 +24,8 @@ install -D -m644 "$p/art/pkz.png" "$out/usr/share/icons/hicolor/48x48/mimetypes/
 install -D -m644 "$p/eula.txt" "$out/usr/share/licenses/packettracer/eula.txt"
 
 # Add environment variable
-install -D -m755 "$env_script" "$out/etc/profile.d/packettracer.sh"
+mkdir -p "$out/etc/profile.d"
+echo "export PT_HOME=$p" > "$out/etc/profile.d/packettracer.sh"
 
 # Remove unused library files
 rm -r $p/lib
