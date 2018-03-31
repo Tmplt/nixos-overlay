@@ -1,5 +1,7 @@
-# { stdenv, requireFile, lib, qt5, openssl }: # TODO: add the remaining deps here
-with import <nixpkgs> {};
+{ stdenv, requireFile, lib
+, pulseaudioFull, libsForQt56, zlibStatic, qt56, zulu, zlib, bzip2, libsForQt5
+, apulse, freetype, xlibs, python27Packages, glib-tested, fontconfig, libpulseaudio, scilab-bin
+, openssl, libpng12, pulseaudioLight, python36Packages, glib, robomongo, qt5, fontconfig_210, zulu8 }:
 
 stdenv.mkDerivation rec {
   name = "packettracer-${version}";
@@ -14,7 +16,7 @@ stdenv.mkDerivation rec {
   builder = ./builder.sh;
 
   libPath = stdenv.lib.makeLibraryPath [
-    # Output of de-generate
+    # Output of de-generate. TODO: clean up
     stdenv.cc.cc.lib
     pulseaudioFull.out
     libsForQt56.qtinstaller.out
