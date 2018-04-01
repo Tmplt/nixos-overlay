@@ -28,7 +28,7 @@ mkdir -p "$out/etc/profile.d"
 echo "export PT_HOME=$p" > "$out/etc/profile.d/packettracer.sh"
 
 # Remove unused library files
-rm -r $p/lib
+rm -r $p/lib $p/install
 
 # Patch binaries
 _patchelf() {
@@ -38,12 +38,20 @@ _patchelf() {
         $1
 }
 
+echo "patching binaries..."
 _patchelf $p/bin/PacketTracer7
 _patchelf $p/bin/linguist
 _patchelf $p/bin/meta
+_patchelf $p/extensions/meta
+# _patchelf $p/extensions/upnp/upnp # verified with hash?
 
 # Symlink to /bin
 mkdir -p "$out/bin"
 ln -s "$p/bin/PacketTracer7" "$out/bin/PacketTracer7"
 ln -s "$p/bin/linguist" "$out/bin/linguist"
 ln -s "$p/bin/meta" "$out/bin/meta"
+
+# Install desktop file
+install -D -m644 "$p/bin/Cisco-PacketTracer.desktop" "$out/usr/share/applications/Cisco-PacketTracer.desktop"
+sed "s#/opt/pt/#$out/#g" -i "$out/usr/share/applications/Cisco-PacketTracer.desktop"
+rm "$p/bin/Cisco-PacketTracer.desktop"
